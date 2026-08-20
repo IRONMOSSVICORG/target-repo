@@ -1,9 +1,5 @@
-# Phase 2. The repository states its review requirement ONCE, in the always-active
-# form: if: true. The branch scoping lives in success_conditions, which is the only
-# way to say "review required on main, lighter policy elsewhere" without putting
-# base in if:.
 merge_protections_settings:
-  auto_merge_conditions: true
+  auto_merge_conditions: false
 
 merge_protections:
   - name: reviewed-everywhere
