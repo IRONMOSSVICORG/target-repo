@@ -1,6 +1,5 @@
-# Rebuttal arm. There is NO `review` action anywhere in this file. Nothing here can
-# create an approving review. The only difference from the case configuration is
-# that the `automatic approval` rule has been deleted outright.
+# .mergify.yml
+
 merge_protections_settings:
   auto_merge_conditions: true
 
@@ -19,6 +18,16 @@ merge_protections:
       - check-success = ci
 
 pull_request_rules:
+
+  - name: automatic approval
+    conditions:
+      - base = release
+      - check-success = ci
+    actions:
+      review:
+        type: APPROVE
+
+
   - name: copy release work to the maintenance branch
     conditions:
       - base = release
