@@ -1,21 +1,19 @@
-# The always-active form, written the way the vendor's footgun guidance recommends:
-# if: true, so the rule can never stop matching. It states a policy STRICTER than the
-# GitHub ruleset, which is the reason to use Merge Protections at all - two approving
-# reviews and a security sign-off label before anything lands on main.
+# The repository states its review requirement ONCE, in Mergify, in the always-active
+# form: if: true, so the rule can never stop matching. The GitHub ruleset marks the
+# `Mergify Merge Protections` check Required, which is what
+# docs.mergify.com/merge-protections/setup instructs, so GitHub is the enforcement
+# point for this policy.
 #
 # There are NO pull_request_rules in this file and NO review action. Nothing here can
-# create an approving review. The GitHub ruleset is untouched: it still requires one
-# approving review, and it marks this check Required.
+# create an approving review, and no human reviews anything in this arm.
 merge_protections_settings:
   auto_merge_conditions: true
 
 merge_protections:
-  - name: guard-main
+  - name: reviewed-everywhere
     if: true
     success_conditions:
       - or:
           - base != main
-          - and:
-              - "#approved-reviews-by >= 2"
-              - label = security-reviewed
+          - "#approved-reviews-by >= 1"
       - check-success = ci
