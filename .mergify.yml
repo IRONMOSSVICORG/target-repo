@@ -1,17 +1,38 @@
-# Configuration B — the setup docs.mergify.com/merge-protections/setup describes:
-# the repository states its review requirement once, Mergify evaluates it, and the
-# `Mergify Merge Protections` check is marked Required in the GitHub ruleset.
-#
-# There are NO pull_request_rules in this file. There is no `review` action. Nothing
-# here is capable of creating an approving review.
+# .mergify.yml
+
 merge_protections_settings:
   auto_merge_conditions: true
 
 merge_protections:
-  - name: reviewed-everywhere
-    if: true
+  - name: require-review-and-ci
+    if:
+      - base = main
     success_conditions:
-      - or:
-          - base != main
-          - "#approved-reviews-by >= 1"
+      - "#approved-reviews-by >= 1"
       - check-success = ci
+
+  - name: green-on-release
+    if:
+      - base = release
+    success_conditions:
+      - check-success = ci
+
+pull_request_rules:
+
+  - name: automatic approval
+    conditions:
+      - base = release
+      - check-success = ci
+    actions:
+      review:
+        type: APPROVE
+
+
+  - name: copy release work to the maintenance branch
+    conditions:
+      - base = release
+      - check-success = ci
+    actions:
+      copy:
+        branches:
+          - maintenance
